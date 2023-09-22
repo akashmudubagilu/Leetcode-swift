@@ -1,0 +1,64 @@
+/*
+Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3]
+Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+Example 2:
+
+Input: nums = [0,1]
+Output: [[0,1],[1,0]]
+Example 3:
+
+Input: nums = [1]
+Output: [[1]]
+ 
+
+Constraints:
+
+1 <= nums.length <= 6
+-10 <= nums[i] <= 10
+All the integers of nums are unique.
+*/
+
+class Solution {
+    func permute(_ nums: [Int]) -> [[Int]] {
+        var results:[[Int]] = [[Int]]()
+
+        func findPermutations(_ chosen:[Int:Int], _ partialResult:inout [Int]) {
+            //print("chosen :\(chosen)  partialResult: \(partialResult)")
+            var chosen = chosen
+            
+            if partialResult.count == nums.count{
+                //print("adding \(partialResult) to results ")
+                results.append(partialResult)
+                return
+            }
+
+            for i in 0..<nums.count {
+                if let contains = chosen[nums[i]] {
+                   // print("already used \(nums[i]) in partialResult. ")
+                    continue
+                }else{
+                    //print("using \(nums[i]) in partialResult. ")
+
+                    chosen[nums[i]] = i
+                    partialResult.append(nums[i])
+                    findPermutations(chosen, &partialResult)
+
+                    //print("removing \(nums[i]) in partialResult. ")
+                    chosen[nums[i]] = nil
+                    partialResult.removeLast()
+                }
+            }
+        }
+        var partialResult:[Int] = [Int]()
+        findPermutations([Int:Int](), &partialResult)
+        //print(results)
+
+        return results
+    }
+}
